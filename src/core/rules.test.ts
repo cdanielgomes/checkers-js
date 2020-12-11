@@ -1,24 +1,63 @@
 import { makeRules } from './rules';
 import { SideType } from './types';
 import { newBoard, newBoardFromData } from './utils';
+import {login, sendData}  from '../qtest/qtest'
 
 const { RED } = SideType;
 
+type Object = {
+  beginTime: Date,
+  endTime: Date,
+  id: String,
+  status: Number
+}
+
+let i : number = 0
+beforeAll(async () => {
+  let a : Boolean = await login()
+  if (a) console.info("Login Done")
+  else console.error("Could not do Login")
+})
+
 describe('Rules', () => {
+
+  let b : Object
+
+  beforeEach(() => {
+    b = {
+      beginTime: new Date(),
+      status: 602,
+      id: "2",
+      endTime: new Date()
+    }
+  })
+
+  afterEach(() => {
+   b.endTime = new Date()
+   sendData(b)
+  })
+
   describe('moves', () => {
     it('should initialize the board', () => {
+      b.id = "144151203"
       const { getBoard } = makeRules(newBoard(), RED);
       const board = getBoard();
       expect(board[0][0]).toBe(1);
+      b.status = 601
+
     });
 
     it('should initialize the side', () => {
+      b.id = "144151204"
       const { getSide } = makeRules(newBoard(), RED);
       const side = getSide();
       expect(side).toBe(1);
+      b.status = 601
+
     });
 
     it('should find the moves from this position', () => {
+      b.id = "144151205"
       const { findMoves } = makeRules(newBoard(), RED);
       const plays = findMoves();
 
@@ -33,13 +72,15 @@ describe('Rules', () => {
         [[6, 2], [5, 3]],
         [[6, 2], [7, 3]],
       ]);
+      b.status = 601
     });
 
     it('should find the jumps from this position', () => {
+      b.id = "144151206"
       const { findJumps } = makeRules(newBoard(), RED);
       const plays = findJumps();
-
       expect(plays.length).toBe(0);
+      b.status = 601
     });
   });
 
@@ -57,18 +98,23 @@ describe('Rules', () => {
     ].reverse();
 
     it('should initialize the board', () => {
+      b.id = "144151207"
       const { getBoard } = makeRules(newBoardFromData(initialData), RED);
       const board = getBoard();
       expect(board[0][0]).toBe(0);
+      b.status = 601
     });
 
     it('should initialize the side', () => {
+      b.id = "144151208"
       const { getSide } = makeRules(newBoardFromData(initialData), RED);
       const side = getSide();
       expect(side).toBe(1);
+      b.status = 601
     });
 
     it('should find the jumps from this position', () => {
+      b.id = "144151209"
       const { findJumps } = makeRules(newBoardFromData(initialData), RED);
       const plays = findJumps();
 
@@ -90,15 +136,18 @@ describe('Rules', () => {
           [4, 6, 5, 5],
         ],
       ]);
+      b.status = 601
     });
 
     it('should build a jump tree from this position', () => {
+      b.id = "144151210"
       const { buildTree } = makeRules(newBoardFromData(initialData), RED);
       const plays = buildTree();
 
       expect(plays['2,0']['4,2']['6,4']['4,6']).toEqual({});
       expect(plays['2,0']['4,2']['2,4']).toEqual({});
       expect(plays['2,0']['0,2']).toEqual({});
+      b.status = 601
     });
   });
 });
