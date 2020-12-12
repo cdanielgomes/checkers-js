@@ -11,7 +11,7 @@ axios.defaults.adapter = require('axios/lib/adapters/http');
 export const login = async () => {
     let configuration =  {
         headers : {
-        "Authorization": process.env.AUTHORIZATION,
+        "Authorization": `Basic ${btoa(process.env.ID + ":")}`,
         "Content-Type": "application/x-www-form-urlencoded"
         }   
     }

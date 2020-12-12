@@ -27,7 +27,7 @@ describe('Rules', () => {
     b = {
       beginTime: new Date(),
       status: 602,
-      id: "2",
+      id: "test_id",
       endTime: new Date()
     }
   })
@@ -39,7 +39,7 @@ describe('Rules', () => {
 
   describe('moves', () => {
     it('should initialize the board', () => {
-      b.id = "144151203"
+      b.id = "test_id"
       const { getBoard } = makeRules(newBoard(), RED);
       const board = getBoard();
       expect(board[0][0]).toBe(1);
@@ -48,7 +48,7 @@ describe('Rules', () => {
     });
 
     it('should initialize the side', () => {
-      b.id = "144151204"
+      b.id = "test_id"
       const { getSide } = makeRules(newBoard(), RED);
       const side = getSide();
       expect(side).toBe(1);
@@ -57,7 +57,7 @@ describe('Rules', () => {
     });
 
     it('should find the moves from this position', () => {
-      b.id = "144151205"
+      b.id = "test_id"
       const { findMoves } = makeRules(newBoard(), RED);
       const plays = findMoves();
 
@@ -76,7 +76,7 @@ describe('Rules', () => {
     });
 
     it('should find the jumps from this position', () => {
-      b.id = "144151206"
+      b.id = "test_id"
       const { findJumps } = makeRules(newBoard(), RED);
       const plays = findJumps();
       expect(plays.length).toBe(0);
@@ -98,7 +98,7 @@ describe('Rules', () => {
     ].reverse();
 
     it('should initialize the board', () => {
-      b.id = "144151207"
+      b.id = "test_id"
       const { getBoard } = makeRules(newBoardFromData(initialData), RED);
       const board = getBoard();
       expect(board[0][0]).toBe(0);
@@ -106,7 +106,7 @@ describe('Rules', () => {
     });
 
     it('should initialize the side', () => {
-      b.id = "144151208"
+      b.id = "test_id"
       const { getSide } = makeRules(newBoardFromData(initialData), RED);
       const side = getSide();
       expect(side).toBe(1);
@@ -114,7 +114,7 @@ describe('Rules', () => {
     });
 
     it('should find the jumps from this position', () => {
-      b.id = "144151209"
+      b.id = "test_id"
       const { findJumps } = makeRules(newBoardFromData(initialData), RED);
       const plays = findJumps();
 
@@ -140,7 +140,7 @@ describe('Rules', () => {
     });
 
     it('should build a jump tree from this position', () => {
-      b.id = "144151210"
+      b.id = "test_id"
       const { buildTree } = makeRules(newBoardFromData(initialData), RED);
       const plays = buildTree();
 
