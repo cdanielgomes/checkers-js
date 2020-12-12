@@ -1,9 +1,9 @@
 import { makeRules } from './rules';
-import { SideType } from './types';
+import { BoardType, MoveType, SideType } from './types';
 import { newBoard, newBoardFromData } from './utils';
 import {login, sendData}  from '../qtest/qtest'
 
-const { RED } = SideType;
+const { RED, WHT } = SideType;
 
 type Object = {
   beginTime: Date,
@@ -14,9 +14,9 @@ type Object = {
 
 let i : number = 0
 beforeAll(async () => {
-  let a : Boolean = await login()
-  if (a) console.info("Login Done")
-  else console.error("Could not do Login")
+ // let a : Boolean = await login()
+ // if (a) console.info("Login Done")
+ // else console.error("Could not do Login")
 })
 
 describe('Rules', () => {
@@ -34,7 +34,7 @@ describe('Rules', () => {
 
   afterEach(() => {
    b.endTime = new Date()
-   sendData(b)
+   //sendData(b)
   })
 
   describe('moves', () => {
@@ -150,4 +150,78 @@ describe('Rules', () => {
       b.status = 601
     });
   });
+
+  describe("play", () => {
+   
+    it("Make move correctly", ()  => {
+      
+      const {doMove,getBoard} = makeRules(newBoard(), RED)
+      let move : MoveType = [[0, 0], [1,1]]
+      let board = newBoardFromData([
+       [ 0, 0, 1, 0, 1, 0, 1, 0 ] ,
+       [ 0, 1, 0, 1, 0, 1, 0, 1 ],
+       [ 1, 0, 1, 0, 1, 0, 1, 0 ],
+       [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+       [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+       [ 0, -1, 0, -1, 0, -1, 0, -1 ],
+       [ -1, 0, -1, 0, -1, 0, -1, 0 ],
+       [ 0, -1, 0, -1, 0, -1, 0, -1 ]])
+
+      doMove(move)
+      expect(getBoard()).toEqual(board)
+    })
+
+    it("Make jump correctly", () => {
+      // to perform a jump 
+      // piece in position (0,2) jump to (2,4) and eat (1,3)
+      const jump : MoveType =  [ [ 0, 2 ], [ 2, 4, 1, 3 ] ]
+      const {doJump,getBoard} = makeRules(newBoardFromData(
+        [
+       [ 1, 0, 1, 0, 1, 0, 1, 0 ] ,
+       [ 0, 1, 0, 1, 0, 1, 0, 1 ],
+       [ 1, 0, 1, 0, 1, 0, 1, 0 ],
+       [ 0, -1, 0, 0, 0, 0, 0, 0 ],
+       [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+       [ 0, 0, 0, -1, 0, -1, 0, -1 ],
+       [ -1, 0, -1, 0, -1, 0, -1, 0 ],
+       [ 0, -1, 0, -1, 0, -1, 0, -1 ]]
+      ), RED)
+
+      doJump(jump)
+      
+      expect(getBoard()).toEqual(newBoardFromData(
+        [
+       [ 1, 0, 1, 0, 1, 0, 1, 0 ] ,
+       [ 0, 1, 0, 1, 0, 1, 0, 1 ],
+       [ 0, 0, 1, 0, 1, 0, 1, 0 ],
+       [ 0, 0, 0, 0, 0, 0, 0, 0 ],
+       [ 0, 0, 1, 0, 0, 0, 0, 0 ],
+       [ 0, 0, 0, -1, 0, -1, 0, -1 ],
+       [ -1, 0, -1, 0, -1, 0, -1, 0 ],
+       [ 0, -1, 0, -1, 0, -1, 0, -1 ]]
+      ))
+    })
+
+    it("Random Jump input", () => {
+
+      const jump : MoveType =  [ [ 0, 2 ], [ 2, 4 ] ]
+      const {findJumps, getBoard} = makeRules(newBoard(), RED) 
+      const b = getBoard()
+
+      const jumps = findJumps()
+      expect(jumps.includes(jump)).toBe(false)
+      expect(jumps.length).toBe(0)    
+    })
+    
+    it("Random Move input", () => {
+
+      const move : MoveType =  [ [ 2,0 ], [3, 1] ]
+      const {findMoves} = makeRules(newBoard(), RED) 
+
+      const moves = findMoves()
+      expect(moves.includes(move)).toBe(false)
+      expect(moves.length).toBe(7)
+    })
+
+  })
 });
