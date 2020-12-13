@@ -1,7 +1,5 @@
 'use strict'
 
-import { response } from "express";
-
 let axios = require("axios")
 let qs = require("querystring")
 let dot_env = require('dotenv');
