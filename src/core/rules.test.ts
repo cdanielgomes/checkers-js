@@ -12,7 +12,6 @@ type Object = {
   status: Number
 }
 
-let i : number = 0
 beforeAll(async () => {
   let a : Boolean = await login()
   if (a) console.info("Login Done")
